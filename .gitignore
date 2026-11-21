@@ -1,0 +1,37 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python and test caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Streamlit secrets and personal environment files
+.streamlit/secrets.toml
+.env
+.env.*
+!.env.example
+
+# Hugging Face and downloaded model caches/weights
+.cache/
+huggingface/
+models/*
+!models/.gitkeep
+*.safetensors
+pytorch_model.bin
+*.bin
+
+# Local SQLite history and temporary database files
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+.DS_Store
+Thumbs.db
+*.log

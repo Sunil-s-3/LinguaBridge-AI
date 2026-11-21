@@ -1,0 +1,337 @@
+.stApp {
+  background:
+    radial-gradient(900px 420px at 0% -10%, rgba(124, 92, 252, 0.22), transparent 60%),
+    radial-gradient(700px 380px at 100% 0%, rgba(32, 201, 151, 0.12), transparent 55%),
+    #0b1020;
+  color: #f8fafc;
+}
+
+html,
+body,
+[data-testid="stAppViewContainer"],
+.main {
+  overflow-x: hidden;
+}
+
+.block-container {
+  max-width: 1120px;
+  padding-top: 1.4rem;
+  padding-bottom: 3rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+}
+
+#MainMenu,
+footer,
+[data-testid="stToolbar"] {
+  visibility: hidden;
+  height: 0;
+}
+
+header[data-testid="stHeader"] {
+  background: transparent;
+}
+
+.lb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.lb-brand {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.lb-mark {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, rgba(124, 92, 252, 0.35), rgba(32, 201, 151, 0.18));
+  box-shadow: 0 10px 30px rgba(8, 12, 28, 0.35);
+}
+
+.lb-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+}
+
+.lb-sub,
+.lb-tag,
+.lb-muted {
+  color: #94a3b8;
+}
+
+.lb-sub {
+  margin: 0.25rem 0 0;
+  font-size: 1.02rem;
+}
+
+.lb-tag {
+  margin: 0.2rem 0 1.2rem;
+  font-size: 0.98rem;
+}
+
+.lb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.lb-pill.ready {
+  color: #20c997;
+  background: rgba(32, 201, 151, 0.12);
+  border-color: rgba(32, 201, 151, 0.35);
+}
+
+.lb-pill.missing {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+
+.lb-card {
+  background: #151c2e;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 20px;
+  padding: 1.15rem 1.2rem 1.2rem;
+  box-shadow: 0 16px 40px rgba(5, 8, 20, 0.28);
+  margin-bottom: 0.4rem;
+}
+
+.lb-kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.lb-kicker h2,
+.lb-section h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #f8fafc;
+}
+
+.lb-script {
+  color: #c4b5fd;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.lb-output {
+  min-height: 7.5rem;
+  font-family: "Nirmala UI", "Segoe UI", sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.75;
+  color: #f8fafc;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.lb-output.empty {
+  color: #94a3b8;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.lb-section {
+  margin-top: 1.35rem;
+}
+
+.lb-section p,
+.lb-note {
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.lb-counts {
+  color: #94a3b8;
+  font-size: 0.92rem;
+  margin: -0.4rem 0 0.8rem;
+}
+
+.lb-counts.warn {
+  color: #fbbf24;
+}
+
+.lb-score {
+  background: #10172a;
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  min-height: 8.5rem;
+}
+
+.lb-score h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.lb-score-value {
+  font-size: 2.3rem;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  color: #f8fafc;
+}
+
+.lb-score-label {
+  margin-top: 0.45rem;
+  font-weight: 700;
+}
+
+.lb-meter {
+  margin-top: 0.8rem;
+  height: 8px;
+  border-radius: 999px;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.lb-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.band-low { color: #fbbf24; }
+.band-moderate { color: #93c5fd; }
+.band-good { color: #5eead4; }
+.band-high { color: #20c997; }
+
+.fill-low { background: #fbbf24; }
+.fill-moderate { background: #60a5fa; }
+.fill-good { background: #2dd4bf; }
+.fill-high { background: #20c997; }
+
+.lb-techniques {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.lb-technique {
+  background: #10172a;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.lb-technique h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.98rem;
+  color: #f8fafc;
+}
+
+.lb-technique p,
+.lb-callout {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.lb-callout {
+  margin-top: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: rgba(124, 92, 252, 0.1);
+  border: 1px solid rgba(124, 92, 252, 0.25);
+}
+
+[data-testid="stTextArea"] textarea {
+  background: #0f1628;
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 16px;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  caret-color: #c4b5fd;
+}
+
+[data-testid="stTextArea"] textarea:focus {
+  border-color: #7c5cfc;
+  box-shadow: 0 0 0 1px #7c5cfc;
+}
+
+[data-testid="stTextArea"] label,
+[data-testid="stWidgetLabel"] p {
+  color: #f8fafc;
+  font-weight: 650;
+}
+
+.stButton > button {
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.stButton > button[kind="primary"],
+.stButton > button[data-testid="stBaseButton-primary"] {
+  background: linear-gradient(135deg, #7c5cfc, #6846f5);
+  color: #ffffff;
+  border: none;
+}
+
+.stButton > button[kind="secondary"],
+.stButton > button[data-testid="stBaseButton-secondary"] {
+  background: #1b2438;
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+[data-testid="stDataFrame"] {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .lb-header {
+    flex-direction: column;
+  }
+
+  .lb-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .lb-techniques {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-output {
+    font-size: 1.28rem;
+  }
+
+  div[data-testid="stHorizontalBlock"] {
+    flex-direction: column;
+  }
+
+  div[data-testid="column"] {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+}
