@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import os
+os.environ.setdefault("PYTHONUTF8", "1")
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+
 import html
 import json
 from pathlib import Path
@@ -13,7 +18,7 @@ import streamlit.components.v1 as components
 from src.evaluation import MISSING_REFERENCE, score_translation
 from src.examples import EXAMPLES
 from src.history import add_translation, clear_history, recent_translations
-from src.translator import TranslationError, translate_text
+from src.translator import TranslationError, load_model, translate_text
 from src.utils import (
     MAX_CHARS,
     all_models_ready,
@@ -26,6 +31,12 @@ from src.utils import (
 
 ROOT = Path(__file__).resolve().parent
 EMPTY_TRANSLATION = "Your translation will appear here."
+
+
+@st.cache_resource(show_spinner=False)
+def get_bundle(language: str):
+    """Load and cache one local or Hugging Face model bundle."""
+    return load_model(language)
 
 
 def inject_css() -> None:
@@ -283,7 +294,9 @@ def run_translation() -> None:
 
     st.session_state.form_error = ""
     try:
-        with st.spinner("Translating into Kannada and Hindi..."):
+        with st.spinner("Loading translation models and translating..."):
+            get_bundle("kannada")
+            get_bundle("hindi")
             kannada = translate_text(source, "kannada")
             hindi = translate_text(source, "hindi")
         st.session_state.kn_out = kannada

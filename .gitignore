@@ -21,6 +21,7 @@ __pycache__/
 # Hugging Face and downloaded model caches/weights
 .cache/
 huggingface/
+data/.hf_cache/
 models/*
 !models/.gitkeep
 *.safetensors

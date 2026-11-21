@@ -14,6 +14,11 @@ MODEL_DIRS = {
     "hindi": MODELS_DIR / "hindi",
 }
 
+MODEL_IDS = {
+    "kannada": "udgamlabs/Paar-en-kn",
+    "hindi": "udgamlabs/Paar-en-hi",
+}
+
 LANGUAGE_NAMES = {
     "kannada": "Kannada",
     "hindi": "Hindi",
@@ -74,12 +79,17 @@ def weights_present(model_dir: Path) -> bool:
 
 
 def model_availability() -> dict[str, bool]:
-    return {code: weights_present(path) for code, path in MODEL_DIRS.items()}
+    """Report whether each language has local weights or may load from Hugging Face."""
+    return {
+        code: weights_present(path)
+        or bool(MODEL_IDS[code])
+        for code, path in MODEL_DIRS.items()
+    }
 
 
 def all_models_ready() -> bool:
-    status = model_availability()
-    return all(status.values())
+    """Cloud deployments can download configured Hugging Face model IDs automatically."""
+    return all(model_availability().values())
 
 
 def missing_model_message() -> str:
@@ -88,7 +98,4 @@ def missing_model_message() -> str:
     if not missing:
         return ""
     names = " and ".join(missing)
-    return (
-        f"The {names} model has not been downloaded yet. "
-        "Connect to the internet once and run: python setup_models.py"
-    )
+    return f"The {names} model configuration is unavailable."

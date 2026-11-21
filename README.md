@@ -42,7 +42,7 @@ Streamlit (app.py)
     +--> data/translation_history.db
 ```
 
-`setup_models.py` downloads the models once into `models/`. `app.py` then loads those folders with `local_files_only=True` and does not call a translation API.
+`setup_models.py` optionally downloads the models into `models/`. On Streamlit Cloud or any machine without local weights, `src/translator.py` automatically loads `udgamlabs/Paar-en-kn` and `udgamlabs/Paar-en-hi` with Hugging Face `from_pretrained()`. Downloaded files are cached under `data/.hf_cache`, and models are cached by Streamlit so repeated Translate clicks do not reload or download them unnecessarily.
 
 ## Installation (Windows)
 

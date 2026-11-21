@@ -1,6 +1,26 @@
 from pathlib import Path
+import os
+import json
+
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
+# Patch Marian vocabulary loading to UTF-8 explicitly for Hugging Face downloads on Windows
+try:
+    import transformers.models.marian.tokenization_marian as marian_tokenizer
+
+    def _utf8_load_json(path):
+        with open(path, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    marian_tokenizer.load_json = _utf8_load_json
+except Exception:
+    pass
+
+# Set UTF-8 environment variables for the module
+os.environ.setdefault("PYTHONUTF8", "1")
+os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,6 +29,12 @@ MODEL_PATHS = {
     "hindi": BASE_DIR / "models" / "hindi",
 }
 
+MODEL_IDS = {
+    "kannada": "udgamlabs/Paar-en-kn",
+    "hindi": "udgamlabs/Paar-en-hi",
+}
+
+HF_CACHE_DIR = BASE_DIR / "data" / ".hf_cache"
 models = {}
 tokenizers = {}
 
@@ -17,22 +43,18 @@ class TranslationError(Exception):
     pass
 
 
-def _validate_model_files(language: str, model_path: Path) -> None:
-    required_files = ("config.json",)
-    for filename in required_files:
-        if not (model_path / filename).is_file():
-            raise TranslationError(
-                f"Model folder is incomplete for {language}: missing {filename}"
-            )
-
+def _validate_model_files(model_path: Path) -> bool:
+    if not (model_path / "config.json").is_file():
+        return False
     has_weights = (
         (model_path / "model.safetensors").is_file()
         or (model_path / "pytorch_model.bin").is_file()
     )
-    if not has_weights:
-        raise TranslationError(
-            f"Model folder is incomplete for {language}: missing model weights"
-        )
+    has_tokenizer = (
+        (model_path / "source.spm").is_file()
+        or (model_path / "tokenizer_config.json").is_file()
+    )
+    return has_weights and has_tokenizer
 
 
 def load_model(language: str):
@@ -41,30 +63,26 @@ def load_model(language: str):
         raise TranslationError(f"Unsupported language: {language}")
 
     if normalized_language not in models:
-        model_path = MODEL_PATHS[normalized_language]
-
-        if not model_path.is_dir():
-            raise TranslationError(
-                f"Model folder not found: {model_path}. Recheck the local models directory."
-            )
-
-        _validate_model_files(normalized_language, model_path)
+        local_path = MODEL_PATHS[normalized_language]
+        source = str(local_path) if _validate_model_files(local_path) else MODEL_IDS[normalized_language]
 
         try:
-            tokenizer = AutoTokenizer.from_pretrained(
-                str(model_path),
-                local_files_only=True,
+            HF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            local_files_only = _validate_model_files(local_path)
+            tokenizers[normalized_language] = AutoTokenizer.from_pretrained(
+                source,
+                cache_dir=str(HF_CACHE_DIR),
+                local_files_only=local_files_only,
             )
-            model = AutoModelForSeq2SeqLM.from_pretrained(
-                str(model_path),
-                local_files_only=True,
+            models[normalized_language] = AutoModelForSeq2SeqLM.from_pretrained(
+                source,
+                cache_dir=str(HF_CACHE_DIR),
+                local_files_only=local_files_only,
             )
-            model.eval()
-            models[normalized_language] = model
-            tokenizers[normalized_language] = tokenizer
+            models[normalized_language].eval()
         except Exception as exc:
             raise TranslationError(
-                f"Failed to load {normalized_language} model locally: {exc}"
+                f"Could not load the {normalized_language} model locally or from Hugging Face: {exc}"
             ) from exc
 
     return models[normalized_language], tokenizers[normalized_language]
@@ -83,7 +101,6 @@ def translate_text(text: str, language: str) -> str:
             truncation=True,
             max_length=128,
         )
-
         with torch.no_grad():
             output = model.generate(
                 **inputs,
@@ -91,7 +108,6 @@ def translate_text(text: str, language: str) -> str:
                 num_beams=4,
                 early_stopping=True,
             )
-
         result = tokenizer.decode(output[0], skip_special_tokens=True)
         if not result.strip():
             raise TranslationError(f"The {language} model returned an empty translation.")
@@ -99,6 +115,4 @@ def translate_text(text: str, language: str) -> str:
     except TranslationError:
         raise
     except Exception as exc:
-        raise TranslationError(
-            f"Translation failed for {language}: {exc}"
-        ) from exc
+        raise TranslationError(f"Translation failed for {language}: {exc}") from exc
